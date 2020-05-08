@@ -1,0 +1,94 @@
+.home{
+  background-color:bisque;
+  height:100%;
+  width:25%;
+  float:right;
+  font-family:cursive;
+}
+.content{
+  height:100%;
+  width:75%;
+  float:left;
+}
+
+.container{
+  display: grid;
+  padding: 50px;
+  grid-row-gap: 50px;
+  font-size: 30px;
+  grid-template-columns: 33.3% 33.3% 33.3%;
+  grid-template-rows: 50% 50% 0%; 
+  grid-auto-flow: row dense;
+}
+
+.item {
+  text-align: center;
+  align-items:center;
+}
+
+.item-1 {
+  grid-column-start: 1;
+  grid-column-end: 3;  
+  background-color:bisque;
+  font-family:cursive;
+}
+
+.item-2 {
+  grid-column-start: 1;
+  grid-column-end: 3;  
+  background-color:bisque;
+  font-family:cursive;
+}
+
+.item-3 {
+
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+
+.item-4 {
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+
+.item-5 {
+
+}
+
+.item-6 {
+
+}
+
+.item-7 {
+
+}
+
+.item-8 {
+
+}
+
+.item-9 {
+
+}
+iframe {
+  
+}
+
+.return-top{
+  width:100px;
+  height:100px;
+  font:bold 50px/100px "宋体";
+  color:#fff;
+  background-color:purple;
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  text-align:center;
+  cursor:pointer;
+  display:none;
+}
+.return-top.active{
+  display:block;
+}

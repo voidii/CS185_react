@@ -1,0 +1,12 @@
+.home{
+  background-color:bisque;
+  height:100%;
+  width:25%;
+  float:right;
+  font-family:cursive;
+}
+.content{
+  height:100%;
+  width:75%;
+  float:left;
+}

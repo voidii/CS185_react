@@ -1,0 +1,13 @@
+.parent
+{
+    background-color:bisque;    
+    width: 100%;
+    height: 300px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+    grid-gap: 10px;
+
+}
+.child{
+    
+}
