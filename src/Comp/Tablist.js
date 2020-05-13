@@ -22,6 +22,10 @@ class Tablist extends Component {
             },
             {
               id: 5,
+              title: 'My Movies'
+            },
+            {
+              id: 6,
               title: 'My Comments'
             }
           ]
