@@ -16,7 +16,8 @@
     "react-modal-image": "^2.5.0",
     "react-popupbox": "^2.0.8",
     "react-scripts": "3.4.1",
-    "react-zmage": "^0.8.5-beta.31"
+    "react-zmage": "^0.8.5-beta.31",
+    "reactjs-popup": "^1.5.0"
   },
   "scripts": {
     "start": "react-scripts start",

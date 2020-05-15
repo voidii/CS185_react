@@ -1,177 +1,177 @@
 import React, { Component } from 'react';
+import Popup from "reactjs-popup";
 import axios from 'axios';
-import {
-    PopupboxManager,
-    PopupboxContainer
-} from 'react-popupbox';
+
 import "./movie.css";
+import MovieCard from "./MovieCard.js";
 
-
-class Movie extends Component {
+class MoviesList extends React.Component {
     state = {
-        
-    }
-    
-    getData(id){
-        if(id === 1){
-            axios.get(`http://www.omdbapi.com/?apikey=80b44c2c&i=tt7605074`)
-              .then(res => {
-                const data = res.data;
-                this.setState( data );
-              })
-        }
-        if(id === 2){
-            axios.get(`http://www.omdbapi.com/?apikey=80b44c2c&i=tt4078856`)
-              .then(res => {
-                const data = res.data;
-                this.setState( data );
-              })
-        }
-        if(id === 3){
-            axios.get(`http://www.omdbapi.com/?apikey=80b44c2c&i=tt0166924`)
-              .then(res => {
-                const data = res.data;
-                this.setState( data );
-              })
-        }
-        if(id === 4){
-            axios.get(`http://www.omdbapi.com/?apikey=80b44c2c&i=tt0990372`)
-              .then(res => {
-                const data = res.data;
-                this.setState( data );
-              })
-        }
-        if(id === 5){
-            axios.get(`http://www.omdbapi.com/?apikey=80b44c2c&i=tt10627720`)
-              .then(res => {
-                const data = res.data;
-                this.setState( data );
-              })
-        }
-        if(id === 6){
-            axios.get(`http://www.omdbapi.com/?apikey=80b44c2c&i=tt1375666`)
-              .then(res => {
-                const data = res.data;
-                this.setState( data );
-              })
-        }
-        if(id === 7){
-            axios.get(`http://www.omdbapi.com/?apikey=80b44c2c&i=tt0258463`)
-              .then(res => {
-                const data = res.data;
-                this.setState( data );
-              })
-        }
-        if(id === 8){
-            axios.get(`http://www.omdbapi.com/?apikey=80b44c2c&i=tt0373074`)
-              .then(res => {
-                const data = res.data;
-                this.setState( data );
-              })
-        }
+        moviesList: ['tt7605074',
+        'tt4078856',
+        'tt0166924',
+        'tt0990372',
+        'tt10627720',
+        'tt1375666',
+        'tt0258463',
+        'tt0373074'],
+        searchTerm: ''
+    };
 
-    }
-    openPopupbox(id) {
-        let imge = (
-            <div></div>
-        )
-        if(id === 1){
-            this.getData(1)
-            imge = (
-                <img src="./movies/liulangqiqiu.jpg" alt="Italian Trulli"></img>
+    search = event => {
+        event.preventDefault();
+        axios
+            .get(
+                `https://www.omdbapi.com/?apikey=80b44c2c&s=${
+                    this.state.searchTerm
+                }&plot=full`
             )
-        }
-        if(id === 2){
-            this.getData(2)
-            imge = (
-                <img src="./movies/xinmigong.jpg" alt="Italian Trulli"></img>
-            )
-        }
-        if(id === 3){
-            this.getData(3)
-            imge = (
-                <img src="./movies/muhelandao.jpg" alt="Italian Trulli"></img>
-            )
-        }
-        if(id === 4){
-            this.getData(4)
-            imge = (
-                <img src="./movies/jimodemoshushi.jpg" alt="Italian Trulli"></img>
-            )
-        }
-        if(id === 5){
-            this.getData(5)
-            imge = (
-                <img src="./movies/nezha.jpg" alt="Italian Trulli"></img>
-            )
-        }
-        if(id === 6){
-            this.getData(6)
-            imge = (
-                <img src="./movies/daomengkongjian.jpg" alt="Italian Trulli"></img>
-            )
-        }
-        if(id === 7){
-            this.getData(7)
-            imge = (
-                <img src="./movies/dieyingchongchong.jpg" alt="Italian Trulli"></img>
-            )
-        }
-        if(id === 8){
-            this.getData(8)
-            imge = (
-                <img src="./movies/gongfu.jpg" alt="Italian Trulli"></img>
-            )
-        }
+            .then(res => res.data)
+            .then(res => {
+                if (!res.Search) {
+                    this.setState({ moviesList: [] });
+                    return;
+                }
 
-        const content = (
-          <div>
-            
-            <p className="quotes">{this.Year}</p>
-            <p className="quotes">Dance like no one is watching.</p>
-            <p className="quotes">And love like you've never been hurt.</p>
-            <span className="quotes-from">― Mark Twain</span>
-          </div>
-        )
-        PopupboxManager.open({ imge, content })
-      }
+                const moviesList = res.Search.map(movie => movie.imdbID);
+                this.setState({
+                    moviesList
+                });
+            });
+    };
+
+    handleChange = event => {
+        this.setState({
+            searchTerm: event.target.value
+        });
+    };
+
     render() {
-        return (
-            <div>
-                <div>
-                  <button onClick={this.openPopupbox(5)}>Click</button>
-                  <PopupboxContainer />
-                </div>
-                <div class="parent">
-                    <div class = "child child-1">
-                        <img onClick={this.openPopupbox(1)} class = "myImg" src="./movies/liulangqiqiu.jpg" alt = "overwatch" float = "center" width = "50%"></img>
+        const { moviesList } = this.state;
 
+        return (
+            <div class="parent">
+                    <div class = "child child-1">
+                        <Popup
+                            trigger={<img class = "myImg" src={ require("./movies/liulangdiqiu.jpg") } alt = "overwatch" float = "center" width = "70%"></img>}
+                            modal
+                            closeOnDocumentClick
+                        >
+                            <span>
+                                <img src={ require("./movies/liulangdiqiu.jpg") } alt = "overwatch" float = "left" width = "40%"></img> 
+                                <div float = "right">
+                                    <MovieCard movieID={'tt7605074'} key={'tt7605074'} />
+                                </div>
+                            </span>
+                        </Popup>
                     </div>
                     <div class = "child child-1">
-                        <img onClick={this.openPopupbox(2)} class = "myImg" src="./movies/xinmigong.jpg" alt = "overwatch" width = "50%"></img>
+                    <Popup
+                            trigger={<img class = "myImg" src={ require("./movies/xinmigong.jpg") } alt = "overwatch" width = "70%"></img>}
+                            modal
+                            closeOnDocumentClick
+                        >
+                            <span>
+                                <img src={ require("./movies/xinmigong.jpg") } alt = "overwatch" float = "left" width = "40%"></img> 
+                                <div float = "right">
+                                    <MovieCard movieID={'tt4078856'} key={'tt4078856'} />
+                                </div>
+                            </span>
+                    </Popup>
+                        
                     </div>
                     <div class = "child child-1">
-                        <img onClick={this.openPopupbox(3)} class = "myImg" src="./movies/muhelandao.jpg" alt = "overwatch" width = "70%"></img>
+                    <Popup
+                            trigger={<img class = "myImg" src={ require("./movies/muhelandao.jpg") } alt = "overwatch" width = "70%"></img>}
+                            modal
+                            closeOnDocumentClick
+                        >
+                            <span>
+                                <img src={ require("./movies/muhelandao.jpg") } alt = "overwatch" float = "left" width = "40%"></img> 
+                                <div float = "right">
+                                    <MovieCard movieID={'tt0166924'} key={'tt0166924'} />
+                                </div>
+                            </span>
+                    </Popup>
+                        
                     </div>
                     <div class = "child child-2">
-                        <img onClick={this.openPopupbox(4)} class = "myImg" src="./movies/jimodemoshushi.jpg" alt = "overwatch" width = "100%"></img>
+                    <Popup
+                            trigger={<img class = "myImg" src={ require("./movies/shijimodemoshushi.jpg") } alt = "overwatch" width = "70%"></img>}
+                            modal
+                            closeOnDocumentClick
+                        >
+                            <span>
+                                <img src={ require("./movies/shijimodemoshushi.jpg") } alt = "overwatch" float = "left" width = "40%"></img> 
+                                <div float = "right">
+                                    <MovieCard movieID={'tt0990372'} key={'tt0990372'} />
+                                </div>
+                            </span>
+                    </Popup>
+                        
                     </div>
                     <div class = "child child-2">
-                        <img onClick={this.openPopupbox(5)} class = "myImg" src="./movies/nezha.jpg" alt = "overwatch" width = "80%"></img>
+                    <Popup
+                            trigger={<img class = "myImg" src={ require("./movies/nezha.jpg") } alt = "overwatch" width = "70%"></img>}
+                            modal
+                            closeOnDocumentClick
+                        >
+                            <span>
+                                <img src={ require("./movies/nezha.jpg") } alt = "overwatch" float = "left" width = "40%"></img> 
+                                <div float = "right">
+                                    <MovieCard movieID={'tt10627720'} key={'tt10627720'} />
+                                </div>
+                            </span>
+                    </Popup>
+                        
                     </div>
                     <div class = "child child-2">
-                        <img onClick={this.openPopupbox(6)} class = "myImg" src="./movies/daomengkongjian.jpg" alt = "overwatch" width = "80%"></img>
+                    <Popup
+                            trigger={<img  class = "myImg" src={ require("./movies/daomengkongjian.jpg") } alt = "overwatch"width = "70%"></img>}
+                            modal
+                            closeOnDocumentClick
+                        >
+                            <span>
+                                <img src={ require("./movies/daomengkongjian.jpg") } alt = "overwatch" float = "left" width = "40%"></img> 
+                                <div float = "right">
+                                    <MovieCard movieID={'tt1375666'} key={'tt1375666'} />
+                                </div>
+                            </span>
+                    </Popup>
+                        
                     </div>
                     <div class = "child child-2">
-                        <img onClick={this.openPopupbox(7)} class = "myImg" src="./movies/dieyingchongchong.jpg" alt = "overwatch" width = "80%"></img>
+                    <Popup
+                            trigger={<img  class = "myImg" src={ require("./movies/dieyingchongchong.jpg") } alt = "overwatch" width = "70%"></img>}
+                            modal
+                            closeOnDocumentClick
+                        >
+                            <span>
+                                <img src={ require("./movies/dieyingchongchong.jpg") } alt = "overwatch" float = "left" width = "40%"></img> 
+                                <div float = "right">
+                                    <MovieCard movieID={'tt0258463'} key={'tt0258463'} />
+                                </div>
+                            </span>
+                    </Popup>
+                        
                     </div>
                     <div class = "child child-2">
-                        <img onClick={this.openPopupbox(8)} class = "myImg" src="./movies/gongfu.jpg" alt = "overwatch" width = "100%"></img>
+                    <Popup
+                            trigger={<img  class = "myImg" src={ require("./movies/gongfu.jpg") } alt = "overwatch"  width = "70%"></img>}
+                            modal
+                            closeOnDocumentClick
+                        >
+                            <span>
+                                <img src={ require("./movies/gongfu.jpg") } alt = "overwatch" float = "left" width = "40%"></img> 
+                                <div float = "right">
+                                    <MovieCard movieID={'tt0373074'} key={'tt0373074'} />
+                                </div>
+                            </span>
+                    </Popup>
+                        
                     </div> 
-                </div>
             </div>
         );
     }
 }
-
-export default Movie;
+export default MoviesList;
