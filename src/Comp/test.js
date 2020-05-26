@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import config from './config';
 import * as firebase from 'firebase';
+import './Comment.css'
 
 
 if (!firebase.apps.length) {
