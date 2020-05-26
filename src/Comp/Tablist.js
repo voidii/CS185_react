@@ -27,6 +27,10 @@ class Tablist extends Component {
             {
               id: 6,
               title: 'My Comments'
+            },
+            {
+              id: 7,
+              title: 'Add Movies'
             }
           ]
         return tabs.map((indTab) => (

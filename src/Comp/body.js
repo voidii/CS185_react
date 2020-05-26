@@ -5,6 +5,7 @@ import My_Overwatch from './My_Overwatch'
 import My_MHW from './My_MHW'
 import MoviesList from './movie'
 import Test from './test'
+import Search from './search'
 
 let data = [];
 
@@ -22,8 +23,10 @@ class body extends Component {
             return <My_MHW/>
         else  if(this.props.activeTab === 5)
             return <MoviesList/>
-        else  
+        else  if(this.props.activeTab === 6)
             return <Test/>
+        else
+            return <Search/>
     }
     render() {
         return (
