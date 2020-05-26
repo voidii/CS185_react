@@ -3,7 +3,7 @@ import Home from './Home'
 import My_League from './My_League'
 import My_Overwatch from './My_Overwatch'
 import My_MHW from './My_MHW'
-import Movie from './movie'
+import MoviesList from './movie'
 import Test from './test'
 
 let data = [];
@@ -21,7 +21,7 @@ class body extends Component {
         else  if(this.props.activeTab === 4)
             return <My_MHW/>
         else  if(this.props.activeTab === 5)
-            return <Movie/>
+            return <MoviesList/>
         else  
             return <Test/>
     }
