@@ -4,6 +4,27 @@ html,body{
     height:100%;
     width:100%;
 }
+
+
+.bar4 {background: #F15B42;}
+.bar4 form {
+    background: #F9F0DA;
+    border-bottom: 2px solid #BE290E;
+}
+.bar4 input, .bar4 button {
+    background: transparent;
+}
+.bar4 button {
+    top: 0;
+    right: 0;
+}
+.bar4 button:before {
+    content: "\f178";
+    font-family: FontAwesome;
+    font-size: 20px;
+    color: #be290e;
+}
+
 .wrapper {
   min-height: 100%;  
   margin-bottom: -50px; /* 等于footer的高度 */
