@@ -6,7 +6,6 @@ import * as firebase from 'firebase';
 import MovieCard from "./MovieCard.js";
 import Popup from "reactjs-popup";
 import axios from 'axios';
-import { _search } from './utils';
 import "./movie.css";
 
 
@@ -22,6 +21,7 @@ class Search extends Component {
     super( props );
     this.state = {
       query: '',
+      ex_list: ['ALL', 'Watched', 'Wanna_Watch'],
       list: 'ALL',
       movies: [],
       loading: false,
@@ -83,9 +83,25 @@ class Search extends Component {
               message: resultNotFoundMsg,
               loading: false,
             })
+            //still needs to know how to fix all
+            if(this.state.list !== 'ALL')
+            {
+              let all = firebase.database().ref('/ALL');
+              all.on('value', snapshot => {
+                const movies = snapshot.val();
+                this.setState({
+                  movies: movies,
+                });
+              });
+              this.setState({
+                movies: this.state.movies.concat({Title, Year, Poster, Director, IMDBID}),
+              });
+              firebase.database().ref('/ALL').set(this.state.movies);
+              console.log('ALL DATA SAVED');
+              this.getUserData();
+            }
           }
       }
-        console.warn( res.data )
       })
       .catch(error => {
         if(axios.isCancel(error) || error){
@@ -102,9 +118,14 @@ class Search extends Component {
       firebase.database().ref('/' + this.state.list).set(this.state.movies);
       console.log('DATA SAVED');
   }
+  writeListData = () => {
+    firebase.database().ref('/list').set(this.state.ex_list);
+    console.log('LIST DATA SAVED');
+  }
     
   getUserData = () => {
       let ref = firebase.database().ref('/' + this.state.list);
+      
       ref.on('value', snapshot => {
         const movies = snapshot.val();
         this.setState({
@@ -113,16 +134,32 @@ class Search extends Component {
       });
       console.log('DATA RETRIEVED');
   }
+  getListData = () => {
+    let ref = firebase.database().ref('/list');
+    ref.on('value', snapshot => {
+      const list = snapshot.val();
+      this.setState({
+        ex_list: list,
+      });
+    });
+    console.log('LIST DATA RETRIEVED');
+}
   
   componentDidMount() {
       this.getUserData();
+      this.getListData();
   }
     
   componentDidUpdate(prevProps, prevState) {
-      // check on previous state
-      // only write when it's different with the new state
+
       if (prevState !== this.state) {
-        this.writeUserData();
+        if(prevState.list !== this.state.list){
+          this.getUserData();
+          return;
+        }
+        else{
+          this.writeUserData();
+        }
       }
   }
 
@@ -136,57 +173,112 @@ class Search extends Component {
   handleOnDropDownChange = (event) => {
     const query = event.value;
     this.setState({ list: query });
-    console.warn(this.state.list);
   };
+
+  addnewlist = (event) =>{
+    let new_list = this.refs.new_list.value;
+    this.setState({ ex_list: this.state.ex_list.concat(new_list)}, () => {
+      this.writeListData();
+    });
+  }
+
 
   
   render() {
     const {query} = this.state;
-    const options = [
-      'ALL', 'Watched', 'Wanna_Watch'
-    ];
+    let ex_list = this.state.ex_list;
     const defaultOption = this.state.list;
     console.warn('render:', this.state.list)
-    //const [ movies ] = this.state.movies;
-    return (  
-      
-      <div>
-        <b>Input IMDB ID</b>
-        <div class="search bar4">
-            <form>
-            <input
-              className="search bar4"
-              value={query}
-              onChange={ this.handleOnInputChange }
-              placeholder="input IMDB ID"
-            />
-                <button type="submit"></button>
-            </form>
-        </div>
-        <Dropdown options={options} value={defaultOption} onChange={this.handleOnDropDownChange} placeholder="Select an option" />
-        <div className = "parent">
-        { 
-          this.state.movies.map(item => 
-            <div className="child child-1">
-              <Popup
-                          trigger={<img class = "myImg" src = {item.Poster} alt = "overwatch" float = "center" width = "50%"></img>}
-                          modal
-                          closeOnDocumentClick
-                      >
-                          <span>
-                              <img src={item.Poster} alt = "overwatch" float = "left" width = "40%"></img> 
-                              <div float = "right">
-                                  <MovieCard movieID={item.IMDBID} key={item.IMDBID} />
-                              </div>
-                          </span>
-                      </Popup>
+    console.warn('render:', this.state.movies)
+    if(this.state.movies){
+      return (  
+        <div>
+          <b>Input IMDB ID</b>
+          <div class="search bar4">
+              <form>
+              <input
+                type = "text"
+                id = "search"
+                className="search bar4"
+                value={query}
+                onChange={ this.handleOnInputChange }
+                placeholder="input IMDB ID"
+              />
+                  <button>Search</button>
+              </form>
+          </div>
+          <b>Add New List</b>
+          <div class="search bar4">
+              <form onSubmit={ this.addnewlist }>
+              <input
+                type = "text"
+                className="search bar4"
+                placeholder="input list ID"
+                ref='new_list'
+              />
+                  <button>Add</button>
+              </form>
+          </div>
+          <Dropdown options={ex_list } value={defaultOption} onChange={this.handleOnDropDownChange} placeholder="Select an option" />
+          <div className = "parent">
+          { 
+            this.state.movies.map(item => 
+              <div className="child child-1">
+                <Popup
+                            trigger={<img class = "myImg" src = {item.Poster} alt = "overwatch" float = "center" width = "50%"></img>}
+                            modal
+                            closeOnDocumentClick
+                        >
+                            <span>
+                                <img src={item.Poster} alt = "overwatch" float = "left" width = "40%"></img> 
+                                <div float = "right">
+                                    <MovieCard movieID={item.IMDBID} key={item.IMDBID} />
+                                </div>
+                            </span>
+                        </Popup>
+              </div>
+              )
+          } 
+          </div>
+          </div>
+
+       );
+      }
+      else{
+        return (  
+          <div>
+            <b>Input IMDB ID</b>
+            <div class="search bar4">
+                <form>
+                <input
+                  type = "text"
+                  id = "search"
+                  className="search bar4"
+                  value={query}
+                  onChange={ this.handleOnInputChange }
+                  placeholder="input IMDB ID"
+                />
+                    <button>Search</button>
+                </form>
             </div>
+            
+            <b>Add New List</b>
+            <div class="search bar4">
+                <form onSubmit={ this.addnewlist }>
+                <input
+                  type = "text"
+                  className="search bar4"
+                  placeholder="input list ID"
+                  ref='new_list'
+                />
+                    <button>Add</button>
+                </form>
+            </div>
+            <Dropdown options={ex_list } value={defaultOption} onChange={this.handleOnDropDownChange} placeholder="Select an option"></Dropdown>
+            </div>
+            
             )
-        } 
-        </div>
-        </div>
-        
-     );
+      }
    }
 
  }
