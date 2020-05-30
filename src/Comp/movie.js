@@ -111,10 +111,12 @@ class MoviesList extends Component {
           firebase.database().ref('/' + this.state.list).set(this.state.movies);
           console.log('DATA SAVED');
       }
+
       writeALLData = () => {
         firebase.database().ref('/ALL').set(this.state.all_movies);
         console.log('ALL DATA SAVED');
       }
+
       writeListData = () => {
         firebase.database().ref('/list').set(this.state.ex_list);
         console.log('LIST DATA SAVED');
@@ -183,6 +185,31 @@ class MoviesList extends Component {
         const query = event.value;
         this.setState({ list: query });
       };
+
+      handleOnListChange = (event, Title, Year, Poster, Director, IMDBID) => {
+        const the_list_add_to = event.value;
+        
+        let ref = firebase.database().ref('/' + the_list_add_to);
+          ref.on('value', snapshot => {
+            const movies = snapshot.val();
+            if(movies === null){
+              this.setState({
+                movies: [{Title, Year, Poster, Director, IMDBID}],
+                list: the_list_add_to
+              });
+            }
+            else
+            {
+              this.setState({
+                movies: movies.concat({Title, Year, Poster, Director, IMDBID}),
+                list: the_list_add_to
+              });
+          }
+          });
+        //console.log(this.state.movies);
+        //this.writeUserData();
+        
+      }
     
       addnewlist = (event) =>{
         let new_list = this.refs.new_list.value;
@@ -190,6 +217,7 @@ class MoviesList extends Component {
           this.writeListData();
         });
       }
+
       removeData = (item) => {
         const { movies } = this.state;
         const newState = movies.filter(data => {
@@ -197,28 +225,24 @@ class MoviesList extends Component {
         });
         this.setState({ movies: newState });
       }
+
       the_list_contain_this_movie = (item) => {
         let result = [];
-        let id = item.IMDBID
-        var i;
-        for(i = 0; i < this.state.ex_list.length;i++)
+        for(let i = 0; i < this.state.ex_list.length; i++)
         {
-          firebase.database()
-          .ref('/' + this.state.ex_list[i])
-          .orderByChild("IMDBID")
-          .equalTo(id)
-          .once("value")
-          .then(snapshot => {
-              if (snapshot.val()) {
-                  // data exist, do something else
-                  result.push(this.state.ex_list[i]);
-                  console.log(result);
-              }
-          })
+          let ref = firebase.database().ref('/' + this.state.ex_list[i]);
+          ref.on('value', snapshot => {
+            let list = JSON.stringify(snapshot.val());
+            if(list === null){}
+            else if(list.indexOf(JSON.stringify(item)) === -1)
+            {
+              result.push(this.state.ex_list[i]);
+            }
+          });
         }
-        console.log(result);
         return result;
       }
+
       onLoadMore = (event) => {
         if((this.state.movies.length - this.state.limit) > 8)
         {
@@ -232,11 +256,13 @@ class MoviesList extends Component {
           });
         }
       };
+
       set_searchMovie = (event) =>{
         this.setState({
           wanted_movie: event.target.value
         })
       }
+
       searchMovie = () => {
         let ref = firebase.database().ref('/ALL');
         ref.orderByChild("Title").equalTo(this.state.wanted_movie).on("child_added", snapshot => {
@@ -245,6 +271,8 @@ class MoviesList extends Component {
           });
         });
       }
+
+  
       
 
     
@@ -254,6 +282,8 @@ class MoviesList extends Component {
         const {query} = this.state.wanted_movie;
         let ex_list = this.state.ex_list;
         const defaultOption = this.state.list;
+        let result = [];
+        let input = {};
         if(this.state.wanted_movie_res !== '' && this.state.wanted_movie !== ''){
           return (
             <div>
@@ -312,7 +342,14 @@ class MoviesList extends Component {
             
             { 
               this.state.movies.slice(0, this.state.limit).map(item => 
+                
+                <div>
+                  <script>
+                    {result = this.the_list_contain_this_movie(item)}
+                  </script>
+          
                 <div className="child child-1">
+                  
                   <Popup
                       trigger={<img class = "myImg" src = {item.Poster} alt = "overwatch" float = "center" width = "50%"></img>}
                       modal
@@ -320,12 +357,13 @@ class MoviesList extends Component {
                   >
                     <span>
                         <img src={item.Poster} alt = "overwatch" float = "left" width = "40%"></img> 
-                        <Dropdown options={ [() => this.the_list_contain_this_movie(item)] } value={defaultOption} placeholder="Select an option"></Dropdown>
+                        <Dropdown options={ result } value={defaultOption} onChange = {(e) => {this.handleOnListChange(e, item.Title, item.Year, item.Poster, item.Director, item.IMDBID)}} placeholder="Select an option"></Dropdown>
                         <div float = "right">
                             <MovieCard movieID={item.IMDBID} key={item.IMDBID} />
                         </div>
                     </span>
                   </Popup>
+                </div>
                 </div>
                 )
             } 
@@ -343,7 +381,7 @@ class MoviesList extends Component {
           return (  
                 <div>
               <Dropdown options={ex_list } value={defaultOption} onChange={this.handleOnDropDownChange} placeholder="Select an option"></Dropdown>
-              
+              {console.log(this.state.list)}
               <div className = "parent">
               { 
                 this.state.movies.map(item => 

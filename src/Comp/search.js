@@ -13,6 +13,7 @@ if (!firebase.apps.length) {
     firebase.initializeApp(config)
 } 
 function uniqueArray(array, key){
+  if(array === null){return array;}
   var result = [array[0]];
   for(var i = 1; i < array.length; i++){
     var item = array[i];
@@ -29,6 +30,18 @@ function uniqueArray(array, key){
   }
   return result;
 }
+function unique(arr){
+  var newArr = [];
+  var item;
+  for(var i = 0, len = arr.length; i < len; i++){
+    item = arr[i];
+    if(newArr.indexOf(item) === -1){
+      newArr.push(item);
+    }
+  }
+  return newArr;
+};
+
 
 
 
@@ -47,6 +60,7 @@ class Search extends Component {
       loading: false,
       message: '',
       list_data:[],
+      this_movie_list:[],
     };
     this.cancel = '';
   }
@@ -128,7 +142,7 @@ class Search extends Component {
         }
         console.warn( error )
       })
-      this.writeMovieListData();
+      
   };
 
   writeUserData = () => {
@@ -145,32 +159,7 @@ class Search extends Component {
     firebase.database().ref('/list').set(this.state.ex_list);
     console.log('LIST DATA SAVED');
   }
-  writeMovieListData = () => {
-    if(this.state.query !== '')
-    {
-      let ref = firebase.database().ref('/' + this.state.query);
-      ref.on('value', snapshot => {
-        const movies = snapshot.val();
-        this.setState({
-          list_data:movies
-        })
-      });
-      if(this.state.list_data === null){
-        firebase.database().ref('/' + this.state.query).set(['ALL', this.state.list]);
-      }
-      else
-      {
-        console.log('start wirte movie list in the function');
-        firebase.database().ref('/' + this.state.query).set(this.state.list_data.concat([this.state.list]));
-        return;
-      }
-      this.setState({
-        query:''
-      })
-      
-      console.log('Movie LIST DATA SAVED');
-    }
-  }
+  
     
   getUserData = () => {
       let ref = firebase.database().ref('/' + this.state.list);
