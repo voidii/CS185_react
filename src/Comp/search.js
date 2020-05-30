@@ -24,6 +24,7 @@ class Search extends Component {
       ex_list: ['ALL', 'Watched', 'Wanna_Watch'],
       list: 'ALL',
       movies: [],
+      all_movies:[],
       loading: false,
       message: '',
     };
@@ -52,11 +53,18 @@ class Search extends Component {
         let Poster = res.data.Poster;
         let Director = res.data.Director;
         let IMDBID = query;
+        if(this.state.all_movies === null){
+          this.setState({
+            all_movies: [{Title, Year, Poster, Director, IMDBID, }],
+            loading: false,
+          })
+        }
 
         if(this.state.movies === null)
         {
           this.setState({
             movies: [{Title, Year, Poster, Director, IMDBID}],
+            all_movies: this.state.all_movies.concat({Title, Year, Poster, Director, IMDBID}),
             message: resultNotFoundMsg,
             loading: false,
           })
@@ -80,26 +88,11 @@ class Search extends Component {
           else{
             this.setState({
               movies: this.state.movies.concat({Title, Year, Poster, Director, IMDBID}),
+              all_movies: this.state.all_movies.concat({Title, Year, Poster, Director, IMDBID}),
               message: resultNotFoundMsg,
               loading: false,
             })
-            //still needs to know how to fix all
-            if(this.state.list !== 'ALL')
-            {
-              let all = firebase.database().ref('/ALL');
-              all.on('value', snapshot => {
-                const movies = snapshot.val();
-                this.setState({
-                  movies: movies,
-                });
-              });
-              this.setState({
-                movies: this.state.movies.concat({Title, Year, Poster, Director, IMDBID}),
-              });
-              firebase.database().ref('/ALL').set(this.state.movies);
-              console.log('ALL DATA SAVED');
-              this.getUserData();
-            }
+
           }
       }
       })
@@ -118,6 +111,10 @@ class Search extends Component {
       firebase.database().ref('/' + this.state.list).set(this.state.movies);
       console.log('DATA SAVED');
   }
+  writeALLData = () => {
+    firebase.database().ref('/ALL').set(this.state.all_movies);
+    console.log('ALL DATA SAVED');
+  }
   writeListData = () => {
     firebase.database().ref('/list').set(this.state.ex_list);
     console.log('LIST DATA SAVED');
@@ -125,7 +122,6 @@ class Search extends Component {
     
   getUserData = () => {
       let ref = firebase.database().ref('/' + this.state.list);
-      
       ref.on('value', snapshot => {
         const movies = snapshot.val();
         this.setState({
@@ -134,6 +130,16 @@ class Search extends Component {
       });
       console.log('DATA RETRIEVED');
   }
+  getALLData = () => {
+    let all = firebase.database().ref('/ALL');
+    all.on('value', snapshot => {
+      const all_movies = snapshot.val();
+      this.setState({
+        all_movies: all_movies,
+      });
+    });
+    console.log('DATA RETRIEVED');
+}
   getListData = () => {
     let ref = firebase.database().ref('/list');
     ref.on('value', snapshot => {
@@ -148,6 +154,7 @@ class Search extends Component {
   componentDidMount() {
       this.getUserData();
       this.getListData();
+      this.getALLData();
   }
     
   componentDidUpdate(prevProps, prevState) {
@@ -155,9 +162,11 @@ class Search extends Component {
       if (prevState !== this.state) {
         if(prevState.list !== this.state.list){
           this.getUserData();
-          return;
         }
-        else{
+        if(prevState.all_movies !== this.state.all_movies){
+          this.writeALLData();
+        }
+        if(prevState.movies !== this.state.movies){
           this.writeUserData();
         }
       }
@@ -191,58 +200,114 @@ class Search extends Component {
     console.warn('render:', this.state.list)
     console.warn('render:', this.state.movies)
     if(this.state.movies){
-      return (  
-        <div>
-          <b>Input IMDB ID</b>
-          <div class="search bar4">
-              <form>
-              <input
-                type = "text"
-                id = "search"
-                className="search bar4"
-                value={query}
-                onChange={ this.handleOnInputChange }
-                placeholder="input IMDB ID"
-              />
-                  <button>Search</button>
-              </form>
-          </div>
-          <b>Add New List</b>
-          <div class="search bar4">
-              <form onSubmit={ this.addnewlist }>
-              <input
-                type = "text"
-                className="search bar4"
-                placeholder="input list ID"
-                ref='new_list'
-              />
-                  <button>Add</button>
-              </form>
-          </div>
-          <Dropdown options={ex_list } value={defaultOption} onChange={this.handleOnDropDownChange} placeholder="Select an option" />
-          <div className = "parent">
-          { 
-            this.state.movies.map(item => 
-              <div className="child child-1">
-                <Popup
-                            trigger={<img class = "myImg" src = {item.Poster} alt = "overwatch" float = "center" width = "50%"></img>}
-                            modal
-                            closeOnDocumentClick
-                        >
-                            <span>
-                                <img src={item.Poster} alt = "overwatch" float = "left" width = "40%"></img> 
-                                <div float = "right">
-                                    <MovieCard movieID={item.IMDBID} key={item.IMDBID} />
-                                </div>
-                            </span>
-                        </Popup>
-              </div>
-              )
-          } 
-          </div>
-          </div>
-
-       );
+      if(this.state.list === 'ALL'){
+        return (  
+          <div>
+            <b>Input IMDB ID</b>
+            <div class="search bar4">
+                <form>
+                <input
+                  type = "text"
+                  id = "search"
+                  className="search bar4"
+                  value={query}
+                  onChange={ this.handleOnInputChange }
+                  placeholder="input IMDB ID"
+                />
+                    <button>Search</button>
+                </form>
+            </div>
+            <b>Add New List</b>
+            <div class="search bar4">
+                <form onSubmit={ this.addnewlist }>
+                <input
+                  type = "text"
+                  className="search bar4"
+                  placeholder="input list ID"
+                  ref='new_list'
+                />
+                    <button>Add</button>
+                </form>
+            </div>
+            <Dropdown options={ex_list } value={defaultOption} onChange={this.handleOnDropDownChange} placeholder="Select an option" />
+            <div className = "parent">
+            { 
+              this.state.all_movies.map(item => 
+                <div className="child child-1">
+                  <Popup
+                              trigger={<img class = "myImg" src = {item.Poster} alt = "overwatch" float = "center" width = "50%"></img>}
+                              modal
+                              closeOnDocumentClick
+                          >
+                              <span>
+                                  <img src={item.Poster} alt = "overwatch" float = "left" width = "40%"></img> 
+                                  <div float = "right">
+                                      <MovieCard movieID={item.IMDBID} key={item.IMDBID} />
+                                  </div>
+                              </span>
+                          </Popup>
+                </div>
+                )
+            } 
+            </div>
+            </div>
+  
+         );
+      }
+      else{
+        return (  
+          <div>
+            <b>Input IMDB ID</b>
+            <div class="search bar4">
+                <form>
+                <input
+                  type = "text"
+                  id = "search"
+                  className="search bar4"
+                  value={query}
+                  onChange={ this.handleOnInputChange }
+                  placeholder="input IMDB ID"
+                />
+                    <button>Search</button>
+                </form>
+            </div>
+            <b>Add New List</b>
+            <div class="search bar4">
+                <form onSubmit={ this.addnewlist }>
+                <input
+                  type = "text"
+                  className="search bar4"
+                  placeholder="input list ID"
+                  ref='new_list'
+                />
+                    <button>Add</button>
+                </form>
+            </div>
+            <Dropdown options={ex_list } value={defaultOption} onChange={this.handleOnDropDownChange} placeholder="Select an option" />
+            <div className = "parent">
+            { 
+              this.state.movies.map(item => 
+                <div className="child child-1">
+                  <Popup
+                              trigger={<img class = "myImg" src = {item.Poster} alt = "overwatch" float = "center" width = "50%"></img>}
+                              modal
+                              closeOnDocumentClick
+                          >
+                              <span>
+                                  <img src={item.Poster} alt = "overwatch" float = "left" width = "40%"></img> 
+                                  <div float = "right">
+                                      <MovieCard movieID={item.IMDBID} key={item.IMDBID} />
+                                  </div>
+                              </span>
+                          </Popup>
+                </div>
+                )
+            } 
+            </div>
+            </div>
+  
+         );
+        }
       }
       else{
         return (  

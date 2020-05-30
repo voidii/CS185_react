@@ -5,6 +5,10 @@ html,body{
     width:100%;
 }
 
+bot{
+    position: fixed;bottom: 0;z-index: 100
+}
+
 
 .bar4 {background: #F15B42;}
 .bar4 form {
@@ -72,6 +76,9 @@ h2 {
 }
 .child{
     
+}
+.child-2{
+    position: fixed;bottom: 0;z-index: 100
 }
 .myImg {
     border-radius: 5px;
