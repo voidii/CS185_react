@@ -12,6 +12,25 @@ import "./movie.css";
 if (!firebase.apps.length) {
     firebase.initializeApp(config)
 } 
+function uniqueArray(array, key){
+  var result = [array[0]];
+  for(var i = 1; i < array.length; i++){
+    var item = array[i];
+    var repeat = false;
+    for (var j = 0; j < result.length; j++) {
+      if (item[key] === result[j][key]) {
+        repeat = true;
+        break;
+      }
+    }
+    if (!repeat) {
+      result.push(item);
+    }
+  }
+  return result;
+}
+
+
 
 
 class Search extends Component {
@@ -27,6 +46,7 @@ class Search extends Component {
       all_movies:[],
       loading: false,
       message: '',
+      list_data:[],
     };
     this.cancel = '';
   }
@@ -68,6 +88,8 @@ class Search extends Component {
             message: resultNotFoundMsg,
             loading: false,
           })
+          this.writeALLData();
+          this.getALLData();
         }
         else
         {
@@ -92,7 +114,8 @@ class Search extends Component {
               message: resultNotFoundMsg,
               loading: false,
             })
-
+            this.writeALLData();
+            this.getALLData();
           }
       }
       })
@@ -105,6 +128,7 @@ class Search extends Component {
         }
         console.warn( error )
       })
+      this.writeMovieListData();
   };
 
   writeUserData = () => {
@@ -112,12 +136,40 @@ class Search extends Component {
       console.log('DATA SAVED');
   }
   writeALLData = () => {
-    firebase.database().ref('/ALL').set(this.state.all_movies);
+    uniqueArray(this.state.all_movies, 'Title')
+    console.log(uniqueArray(this.state.all_movies, 'Title'));
+    firebase.database().ref('/ALL').set(uniqueArray(this.state.all_movies, 'Title'));
     console.log('ALL DATA SAVED');
   }
   writeListData = () => {
     firebase.database().ref('/list').set(this.state.ex_list);
     console.log('LIST DATA SAVED');
+  }
+  writeMovieListData = () => {
+    if(this.state.query !== '')
+    {
+      let ref = firebase.database().ref('/' + this.state.query);
+      ref.on('value', snapshot => {
+        const movies = snapshot.val();
+        this.setState({
+          list_data:movies
+        })
+      });
+      if(this.state.list_data === null){
+        firebase.database().ref('/' + this.state.query).set(['ALL', this.state.list]);
+      }
+      else
+      {
+        console.log('start wirte movie list in the function');
+        firebase.database().ref('/' + this.state.query).set(this.state.list_data.concat([this.state.list]));
+        return;
+      }
+      this.setState({
+        query:''
+      })
+      
+      console.log('Movie LIST DATA SAVED');
+    }
   }
     
   getUserData = () => {
@@ -162,12 +214,16 @@ class Search extends Component {
       if (prevState !== this.state) {
         if(prevState.list !== this.state.list){
           this.getUserData();
+          return;
         }
         if(prevState.all_movies !== this.state.all_movies){
           this.writeALLData();
+          //this.writeMovieListData();
         }
         if(prevState.movies !== this.state.movies){
           this.writeUserData();
+          //this.writeALLData();
+          //this.writeMovieListData();
         }
       }
   }
