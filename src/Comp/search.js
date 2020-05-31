@@ -236,95 +236,6 @@ class Search extends Component {
     const defaultOption = this.state.list;
     console.warn('render:', this.state.list)
     console.warn('render:', this.state.movies)
-    if(this.state.movies){
-      if(this.state.list === 'ALL'){
-        return (  
-          <div>
-            <b>Input IMDB ID</b>
-            <div class="search bar4">
-                <form>
-                <input
-                  type = "text"
-                  id = "search"
-                  className="search bar4"
-                  value={query}
-                  onChange={ this.handleOnInputChange }
-                  placeholder="input IMDB ID"
-                />
-                    <button>Search</button>
-                </form>
-            </div>
-            
-            <Dropdown options={ex_list } value={defaultOption} onChange={this.handleOnDropDownChange} placeholder="Select an option" />
-            <div className = "parent">
-            { 
-              this.state.all_movies.map(item => 
-                <div className="child child-1">
-                  <Popup
-                              trigger={<img class = "myImg" src = {item.Poster} alt = "overwatch" float = "center" width = "50%"></img>}
-                              modal
-                              closeOnDocumentClick
-                          >
-                              <span>
-                                  <img src={item.Poster} alt = "overwatch" float = "left" width = "40%"></img> 
-                                  <div float = "right">
-                                      <MovieCard movieID={item.IMDBID} key={item.IMDBID} />
-                                  </div>
-                              </span>
-                          </Popup>
-                </div>
-                )
-            } 
-            </div>
-            </div>
-  
-         );
-      }
-      else{
-        return (  
-          <div>
-            <b>Input IMDB ID</b>
-            <div class="search bar4">
-                <form>
-                <input
-                  type = "text"
-                  id = "search"
-                  className="search bar4"
-                  value={query}
-                  onChange={ this.handleOnInputChange }
-                  placeholder="input IMDB ID"
-                />
-                    <button>Search</button>
-                </form>
-            </div>
-            
-            <Dropdown options={ex_list } value={defaultOption} onChange={this.handleOnDropDownChange} placeholder="Select an option" />
-            <div className = "parent">
-            { 
-              this.state.movies.map(item => 
-                <div className="child child-1">
-                  <Popup
-                              trigger={<img class = "myImg" src = {item.Poster} alt = "overwatch" float = "center" width = "50%"></img>}
-                              modal
-                              closeOnDocumentClick
-                          >
-                              <span>
-                                  <img src={item.Poster} alt = "overwatch" float = "left" width = "40%"></img> 
-                                  <div float = "right">
-                                      <MovieCard movieID={item.IMDBID} key={item.IMDBID} />
-                                  </div>
-                              </span>
-                          </Popup>
-                </div>
-                )
-            } 
-            </div>
-            </div>
-  
-         );
-        }
-      }
-      else{
         return (  
           <div>
             <b>Input IMDB ID</b>
@@ -348,6 +259,4 @@ class Search extends Component {
             )
       }
    }
-
- }
  export default Search;
