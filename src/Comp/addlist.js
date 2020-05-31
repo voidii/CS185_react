@@ -3,8 +3,6 @@ import Dropdown from 'react-dropdown';
 import 'react-dropdown/style.css';
 import config from './config';
 import * as firebase from 'firebase';
-import MovieCard from "./MovieCard.js";
-import Popup from "reactjs-popup";
 import axios from 'axios';
 import "./movie.css";
 
@@ -46,7 +44,7 @@ function unique(arr){
 
 
 
-class Search extends Component {
+class AddList extends Component {
   //state 定义我们所需要的数据
   
   constructor( props ){
@@ -244,118 +242,25 @@ class Search extends Component {
     const defaultOption = this.state.list;
     console.warn('render:', this.state.list)
     console.warn('render:', this.state.movies)
-    if(this.state.movies){
-      if(this.state.list === 'ALL'){
         return (  
-          <div>
-            <b>Input IMDB ID</b>
+            <div>
+            <b>Add New List</b>
             <div class="search bar4">
-                <form>
+                <form onSubmit={ this.addnewlist }>
                 <input
                   type = "text"
-                  id = "search"
                   className="search bar4"
-                  value={query}
-                  onChange={ this.handleOnInputChange }
-                  placeholder="input IMDB ID"
+                  placeholder="input list ID"
+                  ref='new_list'
                 />
-                    <button>Search</button>
+                    <button>Add</button>
                 </form>
+            </div>
+            <Dropdown options={ex_list } value={defaultOption} placeholder="Select an option"></Dropdown>
             </div>
             
-            <Dropdown options={ex_list } value={defaultOption} onChange={this.handleOnDropDownChange} placeholder="Select an option" />
-            <div className = "parent">
-            { 
-              this.state.all_movies.map(item => 
-                <div className="child child-1">
-                  <Popup
-                              trigger={<img class = "myImg" src = {item.Poster} alt = "overwatch" float = "center" width = "50%"></img>}
-                              modal
-                              closeOnDocumentClick
-                          >
-                              <span>
-                                  <img src={item.Poster} alt = "overwatch" float = "left" width = "40%"></img> 
-                                  <div float = "right">
-                                      <MovieCard movieID={item.IMDBID} key={item.IMDBID} />
-                                  </div>
-                              </span>
-                          </Popup>
-                </div>
-                )
-            } 
-            </div>
-            </div>
-  
-         );
-      }
-      else{
-        return (  
-          <div>
-            <b>Input IMDB ID</b>
-            <div class="search bar4">
-                <form>
-                <input
-                  type = "text"
-                  id = "search"
-                  className="search bar4"
-                  value={query}
-                  onChange={ this.handleOnInputChange }
-                  placeholder="input IMDB ID"
-                />
-                    <button>Search</button>
-                </form>
-            </div>
-            
-            <Dropdown options={ex_list } value={defaultOption} onChange={this.handleOnDropDownChange} placeholder="Select an option" />
-            <div className = "parent">
-            { 
-              this.state.movies.map(item => 
-                <div className="child child-1">
-                  <Popup
-                              trigger={<img class = "myImg" src = {item.Poster} alt = "overwatch" float = "center" width = "50%"></img>}
-                              modal
-                              closeOnDocumentClick
-                          >
-                              <span>
-                                  <img src={item.Poster} alt = "overwatch" float = "left" width = "40%"></img> 
-                                  <div float = "right">
-                                      <MovieCard movieID={item.IMDBID} key={item.IMDBID} />
-                                  </div>
-                              </span>
-                          </Popup>
-                </div>
-                )
-            } 
-            </div>
-            </div>
-  
-         );
-        }
-      }
-      else{
-        return (  
-          <div>
-            <b>Input IMDB ID</b>
-            <div class="search bar4">
-                <form>
-                <input
-                  type = "text"
-                  id = "search"
-                  className="search bar4"
-                  value={query}
-                  onChange={ this.handleOnInputChange }
-                  placeholder="input IMDB ID"
-                />
-                    <button>Search</button>
-                </form>
-            </div>
-          
-            <Dropdown options={ex_list } value={defaultOption} onChange={this.handleOnDropDownChange} placeholder="Select an option"></Dropdown>
-            </div>
             
             )
       }
    }
-
- }
- export default Search;
+ export default AddList;

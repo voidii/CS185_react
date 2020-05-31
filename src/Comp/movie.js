@@ -218,13 +218,42 @@ class MoviesList extends Component {
         });
       }
 
-      removeData = (item) => {
-        const { movies } = this.state;
+      removeData = (item, Title, Year, Poster, Director, IMDBID) => {
+        if(this.state.list === 'ALL'){
+          
+          for(let i = 0; i < this.state.ex_list.length; i++)
+          {
+            let index = -1;
+            let ref = firebase.database().ref( this.state.ex_list[i]);
+            ref.on('value', snapshot => {
+              let list = snapshot.val();
+              if(list === null){return;}
+              for(let j =0; j < list.length; j++)
+              {
+                if(JSON.stringify(item) === JSON.stringify(list[j]))
+                {
+                  index = j;
+                  break;
+                }
+              }
+            
+              
+             
+              if(index !== -1)
+              {
+                ref.child(index).remove();
+              }
+            });
+          }
+          
+        }
+        else
+        {const { movies } = this.state;
         const newState = movies.filter(data => {
           return data.IMDBID !== item.IMDBID;
         });
         this.setState({ movies: newState });
-      }
+      }}
 
       the_list_contain_this_movie = (item) => {
         let result = [];
@@ -309,6 +338,7 @@ class MoviesList extends Component {
                   >
                     <span>
                         <img src={this.state.wanted_movie_res.Poster} alt = "overwatch" float = "left" width = "40%"></img> 
+                      
                         <Dropdown options={ [() => this.the_list_contain_this_movie(this.state.wanted_movie_res)] } value={defaultOption} placeholder="Select an option"></Dropdown>
                         <div float = "right">
                             <MovieCard movieID={this.state.wanted_movie_res.IMDBID} key={this.state.wanted_movie_res.IMDBID} />
@@ -357,6 +387,7 @@ class MoviesList extends Component {
                   >
                     <span>
                         <img src={item.Poster} alt = "overwatch" float = "left" width = "40%"></img> 
+                        <button onClick={ () => this.removeData(item, item.Title, item.Year, item.Poster, item.Director, item.IMDBID)}>Delete</button>
                         <Dropdown options={ result } value={defaultOption} onChange = {(e) => {this.handleOnListChange(e, item.Title, item.Year, item.Poster, item.Director, item.IMDBID)}} placeholder="Select an option"></Dropdown>
                         <div float = "right">
                             <MovieCard movieID={item.IMDBID} key={item.IMDBID} />

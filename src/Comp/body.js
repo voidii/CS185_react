@@ -6,6 +6,7 @@ import My_MHW from './My_MHW'
 import MoviesList from './movie'
 import Test from './test'
 import Search from './search'
+import AddList from './addlist'
 
 let data = [];
 
@@ -25,8 +26,10 @@ class body extends Component {
             return <MoviesList/>
         else  if(this.props.activeTab === 6)
             return <Test/>
-        else
+        else if (this.props.activeTab === 7)
             return <Search/>
+        else    
+            return <AddList/>
     }
     render() {
         return (
