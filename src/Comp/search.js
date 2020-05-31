@@ -18,7 +18,9 @@ function uniqueArray(array, key){
   for(var i = 1; i < array.length; i++){
     var item = array[i];
     var repeat = false;
+    if(item === undefined){continue;}
     for (var j = 0; j < result.length; j++) {
+      
       if (item[key] === result[j][key]) {
         repeat = true;
         break;
@@ -30,17 +32,7 @@ function uniqueArray(array, key){
   }
   return result;
 }
-function unique(arr){
-  var newArr = [];
-  var item;
-  for(var i = 0, len = arr.length; i < len; i++){
-    item = arr[i];
-    if(newArr.indexOf(item) === -1){
-      newArr.push(item);
-    }
-  }
-  return newArr;
-};
+
 
 
 
