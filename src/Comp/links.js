@@ -144,8 +144,8 @@ class Links extends Component{
     }
     const radius = (node) => {
       if(node.type == 'movie')
-        return 40;
-      return 15;
+        return 60;
+      return 25;
     }
 
     const simulation = d3.forceSimulation(obj_nodes)
@@ -163,9 +163,9 @@ class Links extends Component{
                 .attr('height', 1.2)
                 .append('image')
                 .attr('xlink:href', node.poster)
-                .attr('width', 150)
-                .attr('height', 150)
-                .attr('x', -22)
+                .attr('width', 225)
+                .attr('height', 225)
+                .attr('x', -40)
                 .attr('y', -20)
             return 'url(#id' + node.id + ')'
         }
