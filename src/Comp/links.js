@@ -155,7 +155,7 @@ class Links extends Component{
       .force('charge', d3.forceManyBody());
 
       const img = (node) => {
-        if(node.type === 'movie') {
+        if(node.type == 'movie') {
             defs.append('pattern')
                 .attr('id', 'id' + node.id)
                 .attr('patternUnits', 'objectBoundingBox')
@@ -169,7 +169,7 @@ class Links extends Component{
                 .attr('y', -20)
             return 'url(#id' + node.id + ')'
         }
-        return d3.color("#steelblue")
+        return d3.color(" #FFA07A")
     }
     var defs = svg.append('defs')
 
@@ -182,7 +182,21 @@ class Links extends Component{
     .join("circle")
     .attr("r", radius)
     .attr("fill", img)
-    .call(this.drag(simulation));
+    .call(this.drag(simulation))
+    .on('mouseover', function(d) {
+      if(d.type == 'Actor') { 
+          svg.append('text')
+              .attr('stroke', 'black')
+              .text(d.name)
+              .attr('x', d3.select(this).attr("cx") + 10)
+              .attr('y', d3.select(this).attr("cy") + 10)
+      }
+  })
+  .on('mouseout', function(d) {
+      if(d.type == 'Actor') {
+          d3.select('text').remove();
+      }
+  });
 
    
 
