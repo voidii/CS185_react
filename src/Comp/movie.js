@@ -51,11 +51,11 @@ class MoviesList extends Component {
             let Title = res.data.Title;
             let Year = res.data.Year;
             let Poster = res.data.Poster;
-            let Director = res.data.Director;
+            let Actors = res.data.Actors;
             let IMDBID = query;
             if(this.state.all_movies === null){
               this.setState({
-                all_movies: [{Title, Year, Poster, Director, IMDBID}],
+                all_movies: [{Title, Year, Poster, Actors, IMDBID}],
                 loading: false,
               })
             }
@@ -63,8 +63,8 @@ class MoviesList extends Component {
             if(this.state.movies === null)
             {
               this.setState({
-                movies: [{Title, Year, Poster, Director, IMDBID}],
-                all_movies: this.state.all_movies.concat({Title, Year, Poster, Director, IMDBID}),
+                movies: [{Title, Year, Poster, Actors, IMDBID}],
+                all_movies: this.state.all_movies.concat({Title, Year, Poster, Actors, IMDBID}),
                 message: resultNotFoundMsg,
                 loading: false,
               })
@@ -87,8 +87,8 @@ class MoviesList extends Component {
               }
               else{
                 this.setState({
-                  movies: this.state.movies.concat({Title, Year, Poster, Director, IMDBID}),
-                  all_movies: this.state.all_movies.concat({Title, Year, Poster, Director, IMDBID}),
+                  movies: this.state.movies.concat({Title, Year, Poster, Actors, IMDBID}),
+                  all_movies: this.state.all_movies.concat({Title, Year, Poster, Actors, IMDBID}),
                   message: resultNotFoundMsg,
                   loading: false,
                 })
@@ -186,7 +186,7 @@ class MoviesList extends Component {
         this.setState({ list: query });
       };
 
-      handleOnListChange = (event, Title, Year, Poster, Director, IMDBID) => {
+      handleOnListChange = (event, Title, Year, Poster, Actors, IMDBID) => {
         const the_list_add_to = event.value;
         
         let ref = firebase.database().ref('/' + the_list_add_to);
@@ -194,14 +194,14 @@ class MoviesList extends Component {
             const movies = snapshot.val();
             if(movies === null){
               this.setState({
-                movies: [{Title, Year, Poster, Director, IMDBID}],
+                movies: [{Title, Year, Poster, Actors, IMDBID}],
                 list: the_list_add_to
               });
             }
             else
             {
               this.setState({
-                movies: movies.concat({Title, Year, Poster, Director, IMDBID}),
+                movies: movies.concat({Title, Year, Poster, Actors, IMDBID}),
                 list: the_list_add_to
               });
           }
@@ -218,7 +218,7 @@ class MoviesList extends Component {
         });
       }
 
-      removeData = (item, Title, Year, Poster, Director, IMDBID) => {
+      removeData = (item, Title, Year, Poster, Actors, IMDBID) => {
         if(this.state.list === 'ALL'){
           
           for(let i = 0; i < this.state.ex_list.length; i++)
@@ -387,8 +387,8 @@ class MoviesList extends Component {
                   >
                     <span>
                         <img src={item.Poster} alt = "overwatch" float = "left" width = "40%"></img> 
-                        <button onClick={ () => this.removeData(item, item.Title, item.Year, item.Poster, item.Director, item.IMDBID)}>Delete</button>
-                        <Dropdown options={ result } value={defaultOption} onChange = {(e) => {this.handleOnListChange(e, item.Title, item.Year, item.Poster, item.Director, item.IMDBID)}} placeholder="Select an option"></Dropdown>
+                        <button onClick={ () => this.removeData(item, item.Title, item.Year, item.Poster, item.Actors, item.IMDBID)}>Delete</button>
+                        <Dropdown options={ result } value={defaultOption} onChange = {(e) => {this.handleOnListChange(e, item.Title, item.Year, item.Poster, item.Actors, item.IMDBID)}} placeholder="Select an option"></Dropdown>
                         <div float = "right">
                             <MovieCard movieID={item.IMDBID} key={item.IMDBID} />
                         </div>

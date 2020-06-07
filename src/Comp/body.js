@@ -7,10 +7,12 @@ import MoviesList from './movie'
 import Test from './test'
 import Search from './search'
 import AddList from './addlist'
+import Links from './links'
 
-let data = [];
+
 
 class body extends Component {
+    
     
     displayContent = () => {
         
@@ -28,8 +30,10 @@ class body extends Component {
             return <Test/>
         else if (this.props.activeTab === 7)
             return <Search/>
-        else    
+        else if (this.props.activeTab === 8)
             return <AddList/>
+        else   
+            return  <Links/>
     }
     render() {
         return (
