@@ -238,7 +238,7 @@ class Link_Search extends Component {
                   onChange={ this.handleOnInputChange }
                   placeholder="input IMDB ID"
                 />
-                    <button>Search</button>
+                    <button>ADD MOVIE</button>
                 </form>
             </div>
           
