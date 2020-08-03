@@ -1,19 +1,19 @@
 {
   "files": {
-    "main.css": "/CS185_react/static/css/main.dd1e6de7.chunk.css",
-    "main.js": "/CS185_react/static/js/main.c408d33a.chunk.js",
-    "main.js.map": "/CS185_react/static/js/main.c408d33a.chunk.js.map",
+    "main.css": "/CS185_react/static/css/main.ffae4c71.chunk.css",
+    "main.js": "/CS185_react/static/js/main.eb593494.chunk.js",
+    "main.js.map": "/CS185_react/static/js/main.eb593494.chunk.js.map",
     "runtime-main.js": "/CS185_react/static/js/runtime-main.b22a7ead.js",
     "runtime-main.js.map": "/CS185_react/static/js/runtime-main.b22a7ead.js.map",
     "static/css/2.ee241de9.chunk.css": "/CS185_react/static/css/2.ee241de9.chunk.css",
-    "static/js/2.ae5b406d.chunk.js": "/CS185_react/static/js/2.ae5b406d.chunk.js",
-    "static/js/2.ae5b406d.chunk.js.map": "/CS185_react/static/js/2.ae5b406d.chunk.js.map",
+    "static/js/2.822ac3eb.chunk.js": "/CS185_react/static/js/2.822ac3eb.chunk.js",
+    "static/js/2.822ac3eb.chunk.js.map": "/CS185_react/static/js/2.822ac3eb.chunk.js.map",
     "index.html": "/CS185_react/index.html",
-    "precache-manifest.4adda9e0557bd037fec352e507fc35d3.js": "/CS185_react/precache-manifest.4adda9e0557bd037fec352e507fc35d3.js",
+    "precache-manifest.bd589d1110e90f7d909281f958187ddb.js": "/CS185_react/precache-manifest.bd589d1110e90f7d909281f958187ddb.js",
     "service-worker.js": "/CS185_react/service-worker.js",
     "static/css/2.ee241de9.chunk.css.map": "/CS185_react/static/css/2.ee241de9.chunk.css.map",
-    "static/css/main.dd1e6de7.chunk.css.map": "/CS185_react/static/css/main.dd1e6de7.chunk.css.map",
-    "static/js/2.ae5b406d.chunk.js.LICENSE.txt": "/CS185_react/static/js/2.ae5b406d.chunk.js.LICENSE.txt",
+    "static/css/main.ffae4c71.chunk.css.map": "/CS185_react/static/css/main.ffae4c71.chunk.css.map",
+    "static/js/2.822ac3eb.chunk.js.LICENSE.txt": "/CS185_react/static/js/2.822ac3eb.chunk.js.LICENSE.txt",
     "static/media/Image.jpg": "/CS185_react/static/media/Image.4e346a0a.jpg",
     "static/media/M1.png": "/CS185_react/static/media/M1.aae0c6ec.png",
     "static/media/M2.png": "/CS185_react/static/media/M2.7c17f354.png",
@@ -32,8 +32,8 @@
   "entrypoints": [
     "static/js/runtime-main.b22a7ead.js",
     "static/css/2.ee241de9.chunk.css",
-    "static/js/2.ae5b406d.chunk.js",
-    "static/css/main.dd1e6de7.chunk.css",
-    "static/js/main.c408d33a.chunk.js"
+    "static/js/2.822ac3eb.chunk.js",
+    "static/css/main.ffae4c71.chunk.css",
+    "static/js/main.eb593494.chunk.js"
   ]
 }
