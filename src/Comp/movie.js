@@ -398,7 +398,7 @@ class MoviesList extends Component {
                 </div>
                 )
             } 
-            <span className = 'child child-2'>
+            <span className = 'child_1 child_1-2'>
               <div class="search bar4">
                 { this.state.limit !== this.state.movies.length && <button onClick={this.onLoadMore}>Load</button>}
               </div>
@@ -413,10 +413,10 @@ class MoviesList extends Component {
                 <div>
               <Dropdown options={ex_list } value={defaultOption} onChange={this.handleOnDropDownChange} placeholder="Select an option"></Dropdown>
               {console.log(this.state.list)}
-              <div className = "parent">
+              <div className = "parent_1">
               { 
                 this.state.movies.map(item => 
-                  <div className="child child-1">
+                  <div className="child_1">
                     <Popup
                                 trigger={<img class = "myImg" src = {item.Poster} alt = "overwatch" float = "center" width = "50%"></img>}
                                 modal

@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
-
+import './tab.css'
 class Tab extends Component {
     addStyling = () => {
-        if(this.props.tab.id == this.props.activeTab){
-            return {backgroundColor: 'bisque'}
+        if(this.props.tab.id === this.props.activeTab){
+            return {
+                backgroundColor: 'bisque'
+            }
         }
         else{
             return {backgroundColor: 'rgb(243, 199, 163)'}
@@ -11,14 +13,14 @@ class Tab extends Component {
     }
     render() {
         return (
-            <div className = 'tab' 
+            <ul className = 'tab' 
             style = {this.addStyling()}
             onClick={this.props.changeTab.bind(this, this.props.tab.id)}
             >
-                <h2>
-                    {this.props.tab.title}
-                </h2>
-            </div>
+                <a>
+                    <b>{this.props.tab.title}</b>
+                </a>
+            </ul>
         );
     }
 }
